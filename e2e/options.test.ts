@@ -46,13 +46,13 @@ describe("options page", () => {
     let jsonPage = await page.asJSONOptionPage();
     await jsonPage.updateSettings(`{ "blacklist": [ "https://example.com" ] }`);
 
-    let { settings } = await browser.storage.local.get('settings');
+    let { settings } = await browser.storage.sync.get('settings');
     assert.strictEqual(settings.source, 'json');
     assert.strictEqual(settings.json, '{ "blacklist": [ "https://example.com" ] } ');
 
     await jsonPage.updateSettings(`invalid json`);
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.strictEqual(settings.source, 'json');
     assert.strictEqual(settings.json, '{ "blacklist": [ "https://example.com" ] } ');
 

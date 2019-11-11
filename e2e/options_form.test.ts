@@ -31,7 +31,7 @@ describe("options form page", () => {
     let page = await OptionPage.open(lanthan);
     await page.switchToForm();
 
-    let { settings } = await browser.storage.local.get('settings');
+    let { settings } = await browser.storage.sync.get('settings');
     assert.strictEqual(settings.source, 'form')
   });
 
@@ -40,25 +40,25 @@ describe("options form page", () => {
     let forms = await page.switchToForm();
 
     // assert default
-    let settings = (await browser.storage.local.get('settings')).settings;
+    let settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, []);
 
     // add blacklist items
     await forms.addBlacklist();
     await forms.setBlacklist(0, 'google.com');
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, ['google.com']);
 
     await forms.addBlacklist();
     await forms.setBlacklist(1, 'yahoo.com');
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, ['google.com', 'yahoo.com']);
 
     // delete first item
     await forms.removeBlackList(0);
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, ['yahoo.com'])
   });
 
@@ -67,14 +67,14 @@ describe("options form page", () => {
     let forms = await page.switchToForm();
 
     // assert default
-    let settings = (await browser.storage.local.get('settings')).settings;
+    let settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, []);
 
     // add blacklist items
     await forms.addPartialBlacklist();
     await forms.setPartialBlacklist(0, 'google.com', 'j,k,<C-U>');
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, [
       { url: 'google.com', keys: ['j', 'k', '<C-U>'] },
     ]);
@@ -82,7 +82,7 @@ describe("options form page", () => {
     await forms.addPartialBlacklist();
     await forms.setPartialBlacklist(1, 'yahoo.com', 'g,G');
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, [
       { url: 'google.com', keys: ['j', 'k', '<C-U>'] },
       { url: 'yahoo.com', keys: ['g', 'G'] },
@@ -91,7 +91,7 @@ describe("options form page", () => {
     await forms.addBlacklist();
     await forms.setBlacklist(0, 'bing.com');
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, [
       { url: 'google.com', keys: ['j', 'k', '<C-U>'] },
       { url: 'yahoo.com', keys: ['g', 'G'] },
@@ -100,7 +100,7 @@ describe("options form page", () => {
 
     // delete first item
     await forms.removePartialBlackList(0);
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.blacklist, [
       { url: 'yahoo.com', keys: ['g', 'G'] },
       'bing.com',
@@ -112,18 +112,18 @@ describe("options form page", () => {
     let forms = await page.switchToForm();
 
     // assert default
-    let settings = (await browser.storage.local.get('settings')).settings;
+    let settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.search.default, 'google');
 
     // change default
     await forms.setDefaultSearchEngine(2);
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.search.default, 'bing');
 
     await forms.addSearchEngine();
     await forms.setSearchEngine(6, 'yippy', 'https://www.yippy.com/search?query={}');
 
-    settings = (await browser.storage.local.get('settings')).settings;
+    settings = (await browser.storage.sync.get('settings')).settings;
     assert.deepStrictEqual(settings.form.search.engines[6], ['yippy', 'https://www.yippy.com/search?query={}']);
   });
 });

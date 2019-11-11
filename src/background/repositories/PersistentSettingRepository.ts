@@ -4,11 +4,10 @@ import SettingData from '../../shared/SettingData';
 @injectable()
 export default class SettingRepository {
   async load(): Promise<SettingData | null> {
-    let { settings } = await browser.storage.local.get('settings');
+    let { settings } = await browser.storage.sync.get('settings');
     if (!settings) {
       return null;
     }
     return SettingData.fromJSON(settings as any);
   }
 }
-

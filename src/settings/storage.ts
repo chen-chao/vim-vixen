@@ -1,7 +1,7 @@
 import SettingData, { DefaultSettingData } from '../shared/SettingData';
 
 export const load = async(): Promise<SettingData> => {
-  let { settings } = await browser.storage.local.get('settings');
+  let { settings } = await browser.storage.sync.get('settings');
   if (!settings) {
     return DefaultSettingData;
   }
@@ -14,7 +14,7 @@ export const load = async(): Promise<SettingData> => {
 };
 
 export const save = (data: SettingData) => {
-  return browser.storage.local.set({
+  return browser.storage.sync.set({
     settings: data.toJSON(),
   });
 };

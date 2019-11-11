@@ -31,7 +31,7 @@ describe('follow properties test', () => {
     webdriver = lanthan.getWebDriver();
     browser = lanthan.getWebExtBrowser();
 
-    await browser.storage.local.set({ settings: {
+    await browser.storage.sync.set({ settings: {
       source: 'json',
       json: `{
         "keymaps": {
